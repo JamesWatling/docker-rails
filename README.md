@@ -19,8 +19,8 @@ Easy usable, complete docker configuration for rails applications. Less configur
 
 ```
 # Dockerfile
-FROM seyhunak/docker-rails
-MAINTAINER seyhunak(seyhunak@gmail.com)
+FROM JamesWatling/docker-rails
+MAINTAINER jameswatling(watling.james@gmail.com)
 
 EXPOSE 80
 ```
