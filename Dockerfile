@@ -1,7 +1,7 @@
 # DOCKER-VERSION 1.2.0
 
 FROM       ubuntu:14.04
-MAINTAINER Seyhun Akyurek "seyhunak@gmail.com"
+MAINTAINER James Watling "watling.james@gmail.com"
 
 # Install dependency packages
 RUN apt-get update
@@ -19,15 +19,15 @@ ENV PATH /root/.rbenv/bin:/root/.rbenv/shims:/usr/local/sbin:/usr/local/bin:/usr
 ADD ./rbenv.sh /etc/profile.d/rbenv.sh
 
 # Install Ruby
-RUN rbenv install 2.1.2
-RUN rbenv global 2.1.2
+RUN rbenv install 2.1.1
+RUN rbenv global 2.1.1
 RUN rbenv rehash
 
 # Install Bundler
 RUN gem install --no-ri --no-rdoc bundler
 
 # Install Rails
-RUN gem install rails-4.2.0.beta1
+RUN gem install rails-3.2.22
 
 # Install Curl and Node.js (for asset pipeline)
 RUN apt-get install -qq -y curl
@@ -59,29 +59,6 @@ RUN gem install unicorn
 # Add default unicorn config
 ADD unicorn.rb /home/rails/config/unicorn.rb
 
-# Install Beanstalkd
-RUN apt-get install -qq -y beanstalkd
-
-# Install backburner
-RUN gem install backburner
-
-# Add default unicorn config
-ADD backburner.rb /home/rails/config/initializers/backburner.rb
-
-# Install Solr
-RUN wget http://archive.apache.org/dist/lucene/solr/3.6.2/apache-solr-3.6.2.tgz -O /tmp/pkg.tar.gz
-RUN (cd /tmp && tar zxf pkg.tar.gz && mv apache-solr-* /opt/solr)
-RUN rm -rf /tmp/*
-ADD run.sh /usr/local/bin/run
-RUN chmod +x /usr/local/bin/run
-EXPOSE 8983
-CMD ["/usr/local/bin/run"]
-
-# Install Solr
-RUN gem install sunspot
-RUN gem install sunspot_solr
-RUN gem install sunspot_rails
-
 # Install MySQL (for mysql, mysql2 gem)
 RUN apt-get install -qq -y libmysqlclient-dev
 RUN gem install mysql2
@@ -97,6 +74,6 @@ ONBUILD RUN bundle install --without development test
 ONBUILD ADD . /home/rails
 
 # Set ENV Variables
-ENV RAILS_ENV production
+ENV RAILS_ENV development
 
-CMD bundle exec rake assets:precompile && foreman start -f Procfile
+CMD bundle exec bin/server
